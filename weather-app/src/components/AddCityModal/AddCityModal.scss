@@ -1,0 +1,43 @@
+.add-city-modal {
+	padding: 40px 80px;
+	height: 40vh;
+	background-color: rgb(70, 70, 70);
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	&__city {
+		display: flex;
+		flex-direction: column;
+
+		&--label {
+			text-align: center;
+			font-size: 25px;
+		}
+
+		&--input {
+			margin-top: 10px;
+			padding: 5px 10px;
+		}
+	}
+
+	&__close {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+	}
+
+	&__btn {
+		width: 200px;
+	}
+}
+
+.open {
+	display: flex;
+}
+
+.closed {
+	display: none;
+}

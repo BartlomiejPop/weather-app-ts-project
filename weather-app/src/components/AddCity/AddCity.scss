@@ -1,0 +1,16 @@
+.add-city {
+	margin-top: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 30%;
+	height: 70px;
+	border: 1px solid white;
+	border-radius: 10px;
+	cursor: pointer;
+
+	&__icon {
+		width: 5%;
+		color: white;
+	}
+}

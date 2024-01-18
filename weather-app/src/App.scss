@@ -1,0 +1,60 @@
+.project-container {
+	margin: 50px 200px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+// .main-city {
+// 	height: 250px;
+// 	padding: 20px;
+// 	display: flex;
+// 	flex-direction: column;
+// 	justify-content: center;
+// 	align-items: center;
+// 	width: 100%;
+// 	border: 1px solid white;
+// 	border-radius: 20px;
+
+// 	&__title {
+// 		font-size: 30px;
+// 	}
+
+// 	&-options {
+// 		display: flex;
+// 		flex-direction: column;
+// 		align-items: center;
+// 		gap: 20px;
+// 		width: 60%;
+// 	}
+// }
+
+// .cities {
+// 	display: flex;
+// 	justify-content: space-between;
+// 	row-gap: 100px;
+// 	flex-wrap: wrap;
+// 	width: 100%;
+// 	margin-top: 100px;
+// }
+
+// .add-city {
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center;
+// 	width: 300px;
+// 	height: 300px;
+// 	border: 1px solid white;
+// 	border-radius: 10px;
+// 	cursor: pointer;
+
+// 	&__icon {
+// 		width: 20%;
+// 		color: white;
+// 	}
+// }
+
+// .city-card {
+// 	width: 300px;
+// 	height: 300px;
+// }

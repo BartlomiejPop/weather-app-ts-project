@@ -1,0 +1,23 @@
+.main-city {
+	height: 250px;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	border: 1px solid white;
+	border-radius: 20px;
+
+	&__title {
+		font-size: 30px;
+	}
+
+	&-options {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+		width: 60%;
+	}
+}
