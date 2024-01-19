@@ -2,8 +2,8 @@
 	margin-top: 30px;
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
-	row-gap: 50px;
+	justify-content: space-evenly;
+	gap: 50px;
 }
 
 .city-card {

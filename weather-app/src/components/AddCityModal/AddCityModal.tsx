@@ -5,38 +5,16 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal, addCity } from "../../redux/slice";
 // import { addCity } from "../../redux/operations";
-// import { addCity } from "../../redux/operations";
 
 export const AddCityModal = () => {
 	const dispatch = useDispatch();
 	const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 	const isModalOpen = useSelector(selectIsModalOpen);
 
-	// interface FormData {
-	// 	cityName: string;
-	// 	temp_c: boolean;
-	// 	rainfall: boolean;
-	// 	humidity: boolean;
-	// 	cloud: boolean;
-	// 	pressure: boolean;
-	// }
-
-	// const [formData, setFormData] = useState<FormData>({
-	// 	cityName: "",
-	// 	temp_c: false,
-	// 	rainfall: false,
-	// 	humidity: false,
-	// 	cloud: false,
-	// 	pressure: false,
-	// });
-
 	const handleCheckboxChange = (option: string) => {
-		// Sprawdź, czy opcja jest już zaznaczona
 		if (selectedOptions.includes(option)) {
-			// Jeśli jest zaznaczona, usuń ją z listy zaznaczonych
 			setSelectedOptions(selectedOptions.filter((item) => item !== option));
 		} else {
-			// Jeśli nie jest zaznaczona, dodaj do listy zaznaczonych
 			setSelectedOptions([...selectedOptions, option]);
 		}
 	};
@@ -54,8 +32,8 @@ export const AddCityModal = () => {
 				city: city,
 				options: selectedOptions,
 			};
-			console.log(cityOptions);
 			dispatch(addCity(cityOptions));
+
 			dispatch(closeModal());
 		}
 	};
@@ -84,12 +62,12 @@ export const AddCityModal = () => {
 				<div>
 					<input
 						type="checkbox"
-						id="temp_c"
-						value="temp_c"
-						checked={selectedOptions.includes("temp_c")}
-						onChange={() => handleCheckboxChange("temp_c")}
+						id="feelslike_c"
+						value="feelslike_c"
+						checked={selectedOptions.includes("feelslike_c")}
+						onChange={() => handleCheckboxChange("feelslike_c")}
 					/>
-					<label htmlFor="temp_c">Temperature</label>
+					<label htmlFor="feelslike_c">Feelslike temperature</label>
 				</div>
 				<div>
 					<input
