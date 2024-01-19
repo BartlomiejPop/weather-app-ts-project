@@ -3,8 +3,9 @@ import { selectIsModalOpen } from "../../redux/selectors";
 
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { closeModal } from "../../redux/slice";
-import { addCity } from "../../redux/operations";
+import { closeModal, addCity } from "../../redux/slice";
+// import { addCity } from "../../redux/operations";
+// import { addCity } from "../../redux/operations";
 
 export const AddCityModal = () => {
 	const dispatch = useDispatch();
@@ -51,9 +52,10 @@ export const AddCityModal = () => {
 			const city = cityInput.value;
 			const cityOptions = {
 				city: city,
-				options: { selectedOptions },
+				options: selectedOptions,
 			};
 			console.log(cityOptions);
+			dispatch(addCity(cityOptions));
 			dispatch(closeModal());
 		}
 	};
@@ -93,9 +95,9 @@ export const AddCityModal = () => {
 					<input
 						type="checkbox"
 						id="rainfall"
-						value="rainfall"
-						checked={selectedOptions.includes("rainfall")}
-						onChange={() => handleCheckboxChange("rainfall")}
+						value="condition.text"
+						checked={selectedOptions.includes("condition.text")}
+						onChange={() => handleCheckboxChange("condition.text")}
 					/>
 					<label htmlFor="rainfall">Rainfall</label>
 				</div>
@@ -122,12 +124,12 @@ export const AddCityModal = () => {
 				<div>
 					<input
 						type="checkbox"
-						id="pressure"
-						value="pressure"
-						checked={selectedOptions.includes("pressure")}
-						onChange={() => handleCheckboxChange("pressure")}
+						id="pressure_mb"
+						value="pressure_mb"
+						checked={selectedOptions.includes("pressure_mb")}
+						onChange={() => handleCheckboxChange("pressure_mb")}
 					/>
-					<label htmlFor="pressure">Pressure</label>
+					<label htmlFor="pressure_mb">Pressure</label>
 				</div>
 				<button className="add-city-modal__btn">add</button>
 			</form>
