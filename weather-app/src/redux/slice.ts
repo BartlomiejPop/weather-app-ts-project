@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-// import { addCity } from "./operations";
+import { selectMainCity } from "./operations";
 import axios from "axios";
 import Notiflix from "notiflix";
 
@@ -31,6 +31,7 @@ interface cityInformation {
 
 const initialState = {
 	addedCities: [],
+	mainCity: null,
 	isModalOpen: false,
 	isLoading: false,
 	error: null,
@@ -56,7 +57,6 @@ export const addCity = createAsyncThunk(
 				`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`
 			);
 
-			Notiflix.Notify.success(`Added ${city}`);
 			const information: cityInformation = {
 				name: response.data.location.name,
 				temperature: response.data.current.temp_c,
@@ -75,7 +75,15 @@ export const addCity = createAsyncThunk(
 					? response.data.current.pressure_mb
 					: null,
 			};
-
+			const existingInformation = JSON.parse(
+				localStorage.getItem("cityInformations") || "[]"
+			);
+			existingInformation.push(information);
+			localStorage.setItem(
+				"cityInformations",
+				JSON.stringify(existingInformation)
+			);
+			Notiflix.Notify.success(`Added ${city}`);
 			return information;
 		} catch (e: any) {
 			Notiflix.Notify.failure("Bad input");
@@ -99,7 +107,28 @@ export const citySlice = createSlice({
 			state.addedCities = state.addedCities.filter(
 				(city: cityInformation) => city.name !== cityName
 			);
+			localStorage.setItem(
+				"cityInformations",
+				JSON.stringify(state.addedCities)
+			);
 			Notiflix.Notify.success(`${cityName} deleted`);
+		},
+		fetchCities: (state) => {
+			const existingInformation = JSON.parse(
+				localStorage.getItem("cityInformations") || "[]"
+			);
+			state.addedCities = existingInformation;
+
+			const mainCityInformation = JSON.parse(
+				localStorage.getItem("MaincityInformations") || "null"
+			);
+			state.mainCity = mainCityInformation;
+		},
+		deleteMainCity: (state) => {
+			Notiflix.Notify.success(`removed ${state.mainCity} from main `);
+			state.mainCity = null;
+			localStorage.removeItem("MaincityInformations");
+			// localStorage.setItem("MaincityInformations", "");
 		},
 	},
 	extraReducers: (builder) => {
@@ -113,17 +142,25 @@ export const citySlice = createSlice({
 			})
 			.addCase(addCity.rejected, () => {
 				handleRejected;
+			})
+			.addCase(selectMainCity.pending, () => {
+				handlePending;
+			})
+			.addCase(selectMainCity.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.mainCity = action.payload;
+			})
+			.addCase(selectMainCity.rejected, () => {
+				handleRejected;
 			});
 	},
-	// 	[addCity.pending]: handlePending,
-	// 	[addCity.fulfilled](state:any, action:any) {
-	// 		state.push(action.payload)
-	// 		state.isLoading = false;
-	// 		state.error = null;
-	// 	},
-	// 	[addCity.rejected]: handleRejected,
-	// }
 });
 
-export const { openModal, closeModal, deleteCity } = citySlice.actions;
+export const {
+	openModal,
+	closeModal,
+	deleteCity,
+	fetchCities,
+	deleteMainCity,
+} = citySlice.actions;
 export const cityReducer = citySlice.reducer;

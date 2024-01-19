@@ -4,7 +4,7 @@ import { selectIsModalOpen } from "../../redux/selectors";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal, addCity } from "../../redux/slice";
-// import { addCity } from "../../redux/operations";
+import { selectMainCity } from "../../redux/operations";
 
 export const AddCityModal = () => {
 	const dispatch = useDispatch();
@@ -32,7 +32,11 @@ export const AddCityModal = () => {
 				city: city,
 				options: selectedOptions,
 			};
-			dispatch(addCity(cityOptions));
+			if (selectedOptions.includes("Set as main")) {
+				dispatch(selectMainCity(cityOptions));
+			} else {
+				dispatch(addCity(cityOptions));
+			}
 
 			dispatch(closeModal());
 		}
@@ -59,6 +63,16 @@ export const AddCityModal = () => {
 					/>
 				</div>
 				<span>Select informations :</span>
+				<div>
+					<input
+						type="checkbox"
+						id="Set as main"
+						value="Set as main"
+						checked={selectedOptions.includes("Set as main")}
+						onChange={() => handleCheckboxChange("Set as main")}
+					/>
+					<label htmlFor="Set as main">Set as main</label>
+				</div>
 				<div>
 					<input
 						type="checkbox"
