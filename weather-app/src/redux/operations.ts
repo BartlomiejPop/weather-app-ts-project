@@ -20,7 +20,7 @@ interface cityInformation {
 	pressure: number;
 }
 
-export const selectMainCity = createAsyncThunk(
+export const setMainCity = createAsyncThunk(
 	"selectMainCity",
 	async (cityOptions: cityOptions, thunkAPI) => {
 		const city = cityOptions.city;
@@ -58,4 +58,17 @@ export const selectMainCity = createAsyncThunk(
 	}
 );
 
-export default selectMainCity;
+export const fetchCapitals = createAsyncThunk(
+	"fetchAllCapitals",
+	async (_, thunkAPI) => {
+		try {
+			const response = await axios.get(
+				` 'https://restcountries.com/v3.1/all?fields=name';`
+			);
+		} catch (e: any) {
+			return thunkAPI.rejectWithValue(e.message);
+		}
+	}
+);
+
+export default { setMainCity, fetchCapitals };

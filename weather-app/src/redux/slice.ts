@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { selectMainCity } from "./operations";
+import { setMainCity, fetchCapitals } from "./operations";
 import axios from "axios";
 import Notiflix from "notiflix";
+// import { selectAddedCities } from "./selectors";
+// import { useSelector } from "react-redux";
 
 const apiKey = "8bd6b7084a674066b2c180103231804";
 
@@ -16,6 +18,7 @@ interface CityState {
 	isLoading: boolean;
 	error: null | string;
 	data: {};
+	fetchedCapitals: {};
 }
 
 interface cityInformation {
@@ -36,6 +39,7 @@ const initialState = {
 	isLoading: false,
 	error: null,
 	data: {},
+	fetchedCapitals: null,
 };
 
 const handlePending = (state: CityState) => {
@@ -128,7 +132,9 @@ export const citySlice = createSlice({
 			Notiflix.Notify.success(`removed ${state.mainCity} from main `);
 			state.mainCity = null;
 			localStorage.removeItem("MaincityInformations");
-			// localStorage.setItem("MaincityInformations", "");
+		},
+		swap: (state, action) => {
+			console.log(action.payload);
 		},
 	},
 	extraReducers: (builder) => {
@@ -143,16 +149,20 @@ export const citySlice = createSlice({
 			.addCase(addCity.rejected, () => {
 				handleRejected;
 			})
-			.addCase(selectMainCity.pending, () => {
+			.addCase(setMainCity.pending, () => {
 				handlePending;
 			})
-			.addCase(selectMainCity.fulfilled, (state, action) => {
+			.addCase(setMainCity.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.mainCity = action.payload;
 			})
-			.addCase(selectMainCity.rejected, () => {
+			.addCase(setMainCity.rejected, () => {
 				handleRejected;
 			});
+
+		// .addCase(fetchCapitals.fulfilled, (state, action) => {
+		// 	state.fetchedCapitals = action.payload;
+		// });
 	},
 });
 
@@ -162,5 +172,6 @@ export const {
 	deleteCity,
 	fetchCities,
 	deleteMainCity,
+	swap,
 } = citySlice.actions;
 export const cityReducer = citySlice.reducer;

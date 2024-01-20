@@ -4,7 +4,7 @@ import { selectIsModalOpen } from "../../redux/selectors";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal, addCity } from "../../redux/slice";
-import { selectMainCity } from "../../redux/operations";
+import { setMainCity } from "../../redux/operations";
 
 export const AddCityModal = () => {
 	const dispatch = useDispatch();
@@ -32,8 +32,9 @@ export const AddCityModal = () => {
 				city: city,
 				options: selectedOptions,
 			};
+			console.log(cityOptions);
 			if (selectedOptions.includes("Set as main")) {
-				dispatch(selectMainCity(cityOptions));
+				dispatch(setMainCity(cityOptions));
 			} else {
 				dispatch(addCity(cityOptions));
 			}
@@ -58,12 +59,18 @@ export const AddCityModal = () => {
 						name="cityName"
 						required
 						className="add-city-modal__city--input"
-						// value={formData.cityName}
-						// onChange={handleInputChange}
+						list="citiesList"
 					/>
+					<datalist id="citiesList">
+						{/* Dynamicznie renderowane sugestie */}
+						<option value="Warsaw" />
+						<option value="New York" />
+						<option value="Tokyo" />
+						{/* Dodaj więcej opcji według potrzeb */}
+					</datalist>
 				</div>
 				<span>Select informations :</span>
-				<div>
+				<div className="set-as-main-field">
 					<input
 						type="checkbox"
 						id="Set as main"
