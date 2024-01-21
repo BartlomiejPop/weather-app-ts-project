@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal, addCity } from "../../redux/slice";
 import { setMainCity } from "../../redux/operations";
+import Notiflix from "notiflix";
 
 export const AddCityModal = () => {
 	const dispatch = useDispatch();
@@ -19,7 +20,7 @@ export const AddCityModal = () => {
 		}
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		const form = e.currentTarget as HTMLFormElement;
 		const cityInput = form.querySelector(
@@ -32,11 +33,19 @@ export const AddCityModal = () => {
 				city: city,
 				options: selectedOptions,
 			};
-			console.log(cityOptions);
 			if (selectedOptions.includes("Set as main")) {
-				dispatch(setMainCity(cityOptions));
+				const response = await dispatch(setMainCity(cityOptions));
+				if (response.meta.requestStatus === "fulfilled") {
+					Notiflix.Notify.success(`set ${response.payload.name} as main`);
+				}
 			} else {
-				dispatch(addCity(cityOptions));
+				const response = await dispatch(addCity(cityOptions));
+
+				if (response.meta.requestStatus === "fulfilled") {
+					Notiflix.Notify.success(`added ${response.payload.name}`);
+				} else {
+					Notiflix.Notify.failure(`bad input`);
+				}
 			}
 
 			dispatch(closeModal());
@@ -61,13 +70,6 @@ export const AddCityModal = () => {
 						className="add-city-modal__city--input"
 						list="citiesList"
 					/>
-					<datalist id="citiesList">
-						{/* Dynamicznie renderowane sugestie */}
-						<option value="Warsaw" />
-						<option value="New York" />
-						<option value="Tokyo" />
-						{/* Dodaj więcej opcji według potrzeb */}
-					</datalist>
 				</div>
 				<span>Select informations :</span>
 				<div className="set-as-main-field">

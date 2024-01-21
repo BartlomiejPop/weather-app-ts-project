@@ -1,4 +1,7 @@
 import "./AddedCities.scss";
+import swap from "../../icons/swap.svg";
+import xmark from "../../icons/xmark.svg";
+import Notiflix from "notiflix";
 import { selectAddedCities, selectMainCity } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCity, addCity } from "../../redux/slice";
@@ -24,88 +27,81 @@ export const AddedCities = () => {
 	const dispatch = useDispatch();
 	const addedCities = useSelector(selectAddedCities);
 	const mainCity = useSelector(selectMainCity);
-	// const previousMainCity = useSelector(setMainCity);
 
 	const handleDelete = (cityName: string) => {
 		dispatch(deleteCity(cityName));
+		Notiflix.Notify.success(`${cityName} deleted`);
 	};
 
 	const handleSwap = (city: city) => {
-		console.log(city.name);
-		const allKeys = Object.keys(city);
-		const validKeys = allKeys.filter(
-			(key) =>
-				city[key] !== null &&
-				key !== "name" &&
-				key !== "icon" &&
-				key !== "temperature"
-		);
+		const validateKeys = (cityObject: city) => {
+			const allKeys = Object.keys(cityObject);
+			const validKeys = allKeys.filter(
+				(key) =>
+					cityObject[key] !== null &&
+					key !== "name" &&
+					key !== "icon" &&
+					key !== "temperature"
+			);
+			return validKeys;
+		};
+
+		const convertOptionsNamesAndSend = (cityObject: cityOptions) => {
+			if (cityObject.options.includes("condition")) {
+				const conditionIndex = cityObject.options.indexOf("condition");
+				cityObject.options.splice(conditionIndex, 1, "condition.text");
+			}
+			if (cityObject.options.includes("feelslike")) {
+				const conditionIndex = cityObject.options.indexOf("feelslike");
+				cityObject.options.splice(conditionIndex, 1, "feelslike_c");
+			}
+			if (cityObject.options.includes("pressure")) {
+				const conditionIndex = cityObject.options.indexOf("pressure");
+				cityObject.options.splice(conditionIndex, 1, "pressure_mb");
+			}
+		};
+
+		const cityValidKeys = validateKeys(city);
+
 		const cityOptions = {
 			city: city.name,
-			options: validKeys,
+			options: cityValidKeys,
 		};
-		if (cityOptions.options.includes("condition")) {
-			const conditionIndex = cityOptions.options.indexOf("condition");
-			cityOptions.options.splice(conditionIndex, 1, "condition.text");
-		}
-		if (cityOptions.options.includes("feelslike")) {
-			const conditionIndex = cityOptions.options.indexOf("feelslike");
-			cityOptions.options.splice(conditionIndex, 1, "feelslike_c");
-		}
-		if (cityOptions.options.includes("pressure")) {
-			const conditionIndex = cityOptions.options.indexOf("pressure");
-			cityOptions.options.splice(conditionIndex, 1, "pressure_mb");
-		}
 
-		// console.log(cityOptions);
-		// console.log(mainCity);
-		dispatch(setMainCity(cityOptions));
 		const cityName = city.name;
-		dispatch(deleteCity(cityName));
-		const prevMainCityAllKeys = Object.keys(mainCity);
-		const prevMainCityValidKeys = prevMainCityAllKeys.filter(
-			(key) =>
-				mainCity[key] !== null &&
-				key !== "name" &&
-				key !== "icon" &&
-				key !== "temperature"
-		);
-		const prevMainCityOptions = {
-			city: mainCity.name,
-			options: prevMainCityValidKeys,
-		};
 
-		if (prevMainCityOptions.options.includes("condition")) {
-			const conditionIndex = prevMainCityOptions.options.indexOf("condition");
-			prevMainCityOptions.options.splice(conditionIndex, 1, "condition.text");
+		convertOptionsNamesAndSend(cityOptions);
+
+		dispatch(setMainCity(cityOptions));
+		dispatch(deleteCity(cityName));
+
+		if (mainCity !== null) {
+			const prevMainCityValidKeys = validateKeys(mainCity);
+			const prevMainCityOptions = {
+				city: mainCity.name,
+				options: prevMainCityValidKeys,
+			};
+			convertOptionsNamesAndSend(prevMainCityOptions);
+			dispatch(addCity(prevMainCityOptions));
 		}
-		if (prevMainCityOptions.options.includes("feelslike")) {
-			const conditionIndex = prevMainCityOptions.options.indexOf("feelslike");
-			prevMainCityOptions.options.splice(conditionIndex, 1, "feelslike_c");
-		}
-		if (prevMainCityOptions.options.includes("pressure")) {
-			const conditionIndex = prevMainCityOptions.options.indexOf("pressure");
-			prevMainCityOptions.options.splice(conditionIndex, 1, "pressure_mb");
-		}
-		// console.log(prevMainCityOptions);
-		dispatch(addCity(prevMainCityOptions));
+		Notiflix.Notify.success(`${city.name} is now set as main city`);
 	};
 
 	return (
 		<div className="added-cities">
 			{addedCities.map((city: city, index: number) => (
 				<div key={index} className="city-card">
-					<button
-						className="city-card__swap-btn"
-						onClick={() => handleSwap(city)}>
-						o
-					</button>
-					<button
-						className="city-card__btn"
-						onClick={() => handleDelete(city.name)}>
-						X
-					</button>
-					<h2>{city.name}</h2>
+					<div className="options">
+						<button className="options__btn" onClick={() => handleSwap(city)}>
+							<img className="options__btn--icon" src={swap} />
+						</button>
+						<button
+							className="options__btn"
+							onClick={() => handleDelete(city.name)}>
+							<img className="options__btn--icon" src={xmark} />
+						</button>
+					</div>
+					<span>{city.name}</span>
 					<img src={city.icon}></img>
 					<span className="detailed-informations__item">Temperature:</span>
 					<span className="detailed-informations__item--value">

@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectMainCity } from "../../redux/selectors";
+import xmark from "../../icons/xmark.svg";
 
 import "./MainCity.scss";
 import { openModal, deleteMainCity } from "../../redux/slice";
@@ -50,7 +51,7 @@ export const MainCity = () => {
 						<h1>{mainCity!.name}</h1>
 						<img className="labels__icon" src={mainCity!.icon}></img>
 						<button className="labels__btn" onClick={handleDeleteMainCity}>
-							X
+							<img className="labels__btn--icon" src={xmark} />
 						</button>
 					</div>
 					<ul className="informations">
@@ -67,7 +68,7 @@ export const MainCity = () => {
 								<span>Cloud:</span>
 								<span className="informations__item--value">
 									{" "}
-									{mainCity?.cloud}
+									{mainCity?.cloud}%
 								</span>
 							</li>
 						)}
@@ -85,7 +86,7 @@ export const MainCity = () => {
 								<span>Feelslike:</span>
 								<span className="informations__item--value">
 									{" "}
-									{mainCity?.feelslike}
+									{mainCity?.feelslike} C
 								</span>
 							</li>
 						)}
@@ -94,7 +95,7 @@ export const MainCity = () => {
 								<span>Pressure:</span>
 								<span className="informations__item--value">
 									{" "}
-									{mainCity?.pressure}
+									{mainCity?.pressure} hPa
 								</span>
 							</li>
 						)}
@@ -103,7 +104,7 @@ export const MainCity = () => {
 								<span>Humidity:</span>
 								<span className="informations__item--value">
 									{" "}
-									{mainCity?.humidity}
+									{mainCity?.humidity}%
 								</span>
 							</li>
 						)}

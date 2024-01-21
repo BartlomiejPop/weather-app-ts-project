@@ -49,7 +49,7 @@ export const setMainCity = createAsyncThunk(
 					: null,
 			};
 			localStorage.setItem("MaincityInformations", JSON.stringify(information));
-			Notiflix.Notify.success(`Set ${city} as main city`);
+
 			return information;
 		} catch (e: any) {
 			Notiflix.Notify.failure("Bad input");
@@ -65,6 +65,7 @@ export const fetchCapitals = createAsyncThunk(
 			const response = await axios.get(
 				` 'https://restcountries.com/v3.1/all?fields=name';`
 			);
+			return response;
 		} catch (e: any) {
 			return thunkAPI.rejectWithValue(e.message);
 		}

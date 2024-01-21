@@ -87,10 +87,8 @@ export const addCity = createAsyncThunk(
 				"cityInformations",
 				JSON.stringify(existingInformation)
 			);
-			Notiflix.Notify.success(`Added ${city}`);
 			return information;
 		} catch (e: any) {
-			Notiflix.Notify.failure("Bad input");
 			return thunkAPI.rejectWithValue(e.message);
 		}
 	}
@@ -115,7 +113,6 @@ export const citySlice = createSlice({
 				"cityInformations",
 				JSON.stringify(state.addedCities)
 			);
-			Notiflix.Notify.success(`${cityName} deleted`);
 		},
 		fetchCities: (state) => {
 			const existingInformation = JSON.parse(
@@ -129,7 +126,7 @@ export const citySlice = createSlice({
 			state.mainCity = mainCityInformation;
 		},
 		deleteMainCity: (state) => {
-			Notiflix.Notify.success(`removed ${state.mainCity} from main `);
+			Notiflix.Notify.success(`removed ${state.mainCity?.name} from main `);
 			state.mainCity = null;
 			localStorage.removeItem("MaincityInformations");
 		},
