@@ -105,7 +105,7 @@ export const AddedCities = () => {
 					<img src={city.icon}></img>
 					<span className="detailed-informations__item">Temperature:</span>
 					<span className="detailed-informations__item--value">
-						{city.temperature} C
+						{city.temperature} °C
 					</span>
 
 					<ul className="detailed-informations">
@@ -129,7 +129,7 @@ export const AddedCities = () => {
 							<li className="detailed-informations__item">
 								<span>Feelslike:</span>
 								<span className="detailed-informations__item--value">
-									{city.feelslike} C
+									{city.feelslike} °C
 								</span>
 							</li>
 						)}
@@ -145,7 +145,7 @@ export const AddedCities = () => {
 							<li className="detailed-informations__item">
 								<span>Pressure:</span>
 								<span className="detailed-informations__item--value">
-									{city.pressure}
+									{city.pressure}%
 								</span>
 							</li>
 						)}

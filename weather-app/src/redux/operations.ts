@@ -52,24 +52,32 @@ export const setMainCity = createAsyncThunk(
 
 			return information;
 		} catch (e: any) {
-			Notiflix.Notify.failure("Bad input");
 			return thunkAPI.rejectWithValue(e.message);
 		}
 	}
 );
 
-export const fetchCapitals = createAsyncThunk(
-	"fetchAllCapitals",
-	async (_, thunkAPI) => {
+export const fetchMatchingCities = createAsyncThunk(
+	"fetchMatchingCities",
+	async (value, thunkAPI) => {
 		try {
 			const response = await axios.get(
-				` 'https://restcountries.com/v3.1/all?fields=name';`
+				` http://api.geonames.org/searchJSON?q=${value}&MaxRows=1&username=bartlomiejp`
 			);
-			return response;
+			const resultObjects = response.data.geonames;
+			const arrayOfNeededObjects = [];
+			for (let i = 0; i < 8; i++) {
+				const currentObject = resultObjects[i];
+				arrayOfNeededObjects.push({
+					city: currentObject.name,
+					country: currentObject.countryName,
+				});
+			}
+			return arrayOfNeededObjects;
 		} catch (e: any) {
 			return thunkAPI.rejectWithValue(e.message);
 		}
 	}
 );
 
-export default { setMainCity, fetchCapitals };
+export default { setMainCity, fetchMatchingCities };

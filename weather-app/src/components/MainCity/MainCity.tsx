@@ -59,7 +59,7 @@ export const MainCity = () => {
 							<li className="informations__item">
 								<span>Temperature:</span>
 								<span className="informations__item--value">
-									{mainCity?.temperature} C
+									{mainCity?.temperature} °C
 								</span>
 							</li>
 						)}

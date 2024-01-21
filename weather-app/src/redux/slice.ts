@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { setMainCity, fetchCapitals } from "./operations";
+import { setMainCity, fetchMatchingCities } from "./operations";
 import axios from "axios";
 import Notiflix from "notiflix";
 // import { selectAddedCities } from "./selectors";
@@ -38,8 +38,7 @@ const initialState = {
 	isModalOpen: false,
 	isLoading: false,
 	error: null,
-	data: {},
-	fetchedCapitals: null,
+	fetchedCities: [],
 };
 
 const handlePending = (state: CityState) => {
@@ -103,6 +102,7 @@ export const citySlice = createSlice({
 		},
 		closeModal: (state) => {
 			state.isModalOpen = false;
+			state.fetchedCities = [];
 		},
 		deleteCity: (state, action) => {
 			const cityName = action.payload;
@@ -155,11 +155,11 @@ export const citySlice = createSlice({
 			})
 			.addCase(setMainCity.rejected, () => {
 				handleRejected;
-			});
+			})
 
-		// .addCase(fetchCapitals.fulfilled, (state, action) => {
-		// 	state.fetchedCapitals = action.payload;
-		// });
+			.addCase(fetchMatchingCities.fulfilled, (state, action) => {
+				state.fetchedCities = action.payload;
+			});
 	},
 });
 
