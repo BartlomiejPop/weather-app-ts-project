@@ -73,8 +73,10 @@ export const citySlice = createSlice({
 			);
 			state.mainCity = mainCityInformation;
 		},
-		deleteMainCity: (state) => {
-			Notiflix.Notify.success(`removed ${state.mainCity?.name} from main `);
+		deleteMainCity: (state, action) => {
+			if (action.payload) {
+				Notiflix.Notify.success(`removed ${state.mainCity?.name} from main `);
+			}
 			state.mainCity = null;
 			localStorage.removeItem("MaincityInformations");
 		},

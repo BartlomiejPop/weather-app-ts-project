@@ -7,6 +7,7 @@ import "./MainCity.scss";
 import { openModal, deleteMainCity } from "../../redux/slice";
 import Notiflix from "notiflix";
 import { getCurrentPosition, setMainCity } from "../../redux/operations";
+import { AppDispatch } from "../../redux/store";
 
 interface cityInformation {
 	name: string;
@@ -20,12 +21,12 @@ interface cityInformation {
 }
 
 export const MainCity = () => {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const mainCity = useSelector(selectMainCity) as cityInformation | null;
 	const isMainCitySet = Boolean(mainCity);
 
 	const handleDeleteMainCity = () => {
-		dispatch(deleteMainCity());
+		dispatch(deleteMainCity(true));
 	};
 
 	const handleSelect = () => {
@@ -35,11 +36,13 @@ export const MainCity = () => {
 	const handleGetPosition = async () => {
 		if (navigator.geolocation) {
 			const response = await dispatch(getCurrentPosition());
-			if (response.payload.city) {
-				dispatch(setMainCity(response.payload));
-				Notiflix.Notify.success(
-					`${response.payload.city} is now set as main city`
-				);
+			const payload = response.payload as {
+				city: string;
+				options: string[];
+			};
+			if (payload.city) {
+				dispatch(setMainCity(payload));
+				Notiflix.Notify.success(`${payload.city} is now set as main city`);
 			} else {
 				Notiflix.Notify.failure(`Geolocation error`);
 			}

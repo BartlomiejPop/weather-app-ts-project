@@ -4,8 +4,9 @@ import xmark from "../../icons/xmark.svg";
 import Notiflix from "notiflix";
 import { selectAddedCities, selectMainCity } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCity } from "../../redux/slice";
+import { deleteCity, deleteMainCity } from "../../redux/slice";
 import { setMainCity, addCity } from "../../redux/operations";
+import { AppDispatch } from "../../redux/store";
 
 interface cityOptions {
 	city: string;
@@ -24,7 +25,7 @@ interface city {
 }
 
 export const AddedCities = () => {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const addedCities = useSelector(selectAddedCities);
 	const mainCity = useSelector(selectMainCity);
 
@@ -72,8 +73,9 @@ export const AddedCities = () => {
 
 		convertOptionsNamesAndSend(cityOptions);
 
-		dispatch(setMainCity(cityOptions));
 		dispatch(deleteCity(cityName));
+		dispatch(deleteMainCity(false));
+		dispatch(setMainCity(cityOptions));
 
 		if (mainCity !== null) {
 			const prevMainCityValidKeys = validateKeys(mainCity);

@@ -11,20 +11,10 @@ import {
 	addCity,
 } from "../../redux/operations";
 import Notiflix from "notiflix";
-
-// interface cityInformation {
-// 	name: string;
-// 	temperature: number;
-// 	icon: string;
-// 	feelslike: number;
-// 	condition: string;
-// 	humidity: number;
-// 	cloud: number;
-// 	pressure: number;
-// }
+import { AppDispatch } from "../../redux/store";
 
 export const AddCityModal = () => {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 	const [inputValue, setInputValue] = useState<string>("");
 	const isModalOpen = useSelector(selectIsModalOpen);
@@ -60,8 +50,11 @@ export const AddCityModal = () => {
 			};
 			if (selectedOptions.includes("Set as main")) {
 				const response = await dispatch(setMainCity(cityOptions));
+				const payload = response.payload as {
+					name: string;
+				};
 				if (response.meta.requestStatus === "fulfilled") {
-					Notiflix.Notify.success(`set ${response.payload.name} as main`);
+					Notiflix.Notify.success(`set ${payload.name} as main`);
 					dispatch(closeModal());
 				} else {
 					if (response.payload !== "This city is already in list") {
@@ -70,8 +63,11 @@ export const AddCityModal = () => {
 				}
 			} else {
 				const response = await dispatch(addCity(cityOptions));
+				const payload = response.payload as {
+					name: string;
+				};
 				if (response.meta.requestStatus === "fulfilled") {
-					Notiflix.Notify.success(`added ${response.payload.name}`);
+					Notiflix.Notify.success(`added ${payload.name}`);
 					dispatch(closeModal());
 				} else {
 					if (response.payload !== "This city is already in list") {

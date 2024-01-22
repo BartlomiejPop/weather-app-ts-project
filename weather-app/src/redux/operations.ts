@@ -144,7 +144,7 @@ export const addCity = createAsyncThunk(
 
 export const fetchMatchingCities = createAsyncThunk(
 	"fetchMatchingCities",
-	async (value, thunkAPI) => {
+	async (value: string, thunkAPI) => {
 		try {
 			const response = await axios.get(
 				` http://api.geonames.org/searchJSON?q=${value}&MaxRows=1&username=bartlomiejp`
