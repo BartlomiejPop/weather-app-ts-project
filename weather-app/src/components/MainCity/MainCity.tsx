@@ -1,9 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectMainCity } from "../../redux/selectors";
 import xmark from "../../icons/xmark.svg";
+import location from "../../icons/location.svg";
 
 import "./MainCity.scss";
 import { openModal, deleteMainCity } from "../../redux/slice";
+import Notiflix from "notiflix";
+import { getCurrentPosition, setMainCity } from "../../redux/operations";
 
 interface cityInformation {
 	name: string;
@@ -29,14 +32,35 @@ export const MainCity = () => {
 		dispatch(openModal());
 	};
 
+	const handleGetPosition = async () => {
+		if (navigator.geolocation) {
+			const response = await dispatch(getCurrentPosition());
+			if (response.payload.city) {
+				dispatch(setMainCity(response.payload));
+				Notiflix.Notify.success(
+					`${response.payload.city} is now set as main city`
+				);
+			} else {
+				Notiflix.Notify.failure(`Geolocation error`);
+			}
+		} else {
+			Notiflix.Notify.failure("Geolocation is not supported by this browser.");
+		}
+	};
+
 	return (
 		<div className="main-city">
 			{!isMainCitySet ? (
 				<div className="select-box">
 					<h1 className="select-box__title">Main city</h1>
 					<div className="select-box-options">
-						<button className="selectBox-options__localize-btn">
-							localize me
+						<button
+							className="selectBox-options__localize-btn"
+							onClick={handleGetPosition}>
+							<img
+								className="selectBox-options__localize-btn--icon"
+								src={location}
+							/>
 						</button>
 						<button
 							className="selectBox-options__select-btn"
@@ -55,24 +79,22 @@ export const MainCity = () => {
 						</button>
 					</div>
 					<ul className="informations">
-						{mainCity?.temperature && (
-							<li className="informations__item">
-								<span>Temperature:</span>
-								<span className="informations__item--value">
-									{mainCity?.temperature} °C
-								</span>
-							</li>
-						)}
-						{mainCity?.cloud && (
+						<li className="informations__item">
+							<span>Temperature:</span>
+							<span className="informations__item--value">
+								{mainCity?.temperature} °C
+							</span>
+						</li>
+
+						{mainCity?.cloud !== null && (
 							<li className="informations__item">
 								<span>Cloud:</span>
 								<span className="informations__item--value">
-									{" "}
 									{mainCity?.cloud}%
 								</span>
 							</li>
 						)}
-						{mainCity?.condition && (
+						{mainCity?.condition !== null && (
 							<li className="informations__item">
 								<span>Condition:</span>
 								<span className="informations__item--value">
@@ -81,7 +103,7 @@ export const MainCity = () => {
 								</span>
 							</li>
 						)}
-						{mainCity?.feelslike && (
+						{mainCity?.feelslike !== null && (
 							<li className="informations__item">
 								<span>Feelslike:</span>
 								<span className="informations__item--value">
@@ -90,7 +112,7 @@ export const MainCity = () => {
 								</span>
 							</li>
 						)}
-						{mainCity?.pressure && (
+						{mainCity?.pressure !== null && (
 							<li className="informations__item">
 								<span>Pressure:</span>
 								<span className="informations__item--value">
@@ -99,7 +121,7 @@ export const MainCity = () => {
 								</span>
 							</li>
 						)}
-						{mainCity?.humidity && (
+						{mainCity?.humidity !== null && (
 							<li className="informations__item">
 								<span>Humidity:</span>
 								<span className="informations__item--value">

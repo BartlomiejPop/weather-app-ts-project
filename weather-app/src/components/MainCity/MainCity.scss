@@ -14,14 +14,17 @@
 .select-box {
 	display: flex;
 	flex-direction: column;
+	justify-content: space-around;
+	height: 100%;
 	&__title {
 		font-size: 50px;
+		margin: 0;
 	}
 
 	&-options {
 		display: flex;
-
-		justify-content: space-between;
+		flex-direction: column-reverse;
+		gap: 30px;
 	}
 }
 
@@ -79,4 +82,8 @@
 			font-weight: 600;
 		}
 	}
+}
+
+.selectBox-options__localize-btn--icon {
+	width: 15px;
 }

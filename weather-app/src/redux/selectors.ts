@@ -8,3 +8,5 @@ export const selectMainCity = (state: RootState) => state.cities.mainCity;
 
 export const selectFetchedCities = (state: RootState) =>
 	state.cities.fetchedCities;
+
+export const selectIsLoading = (state: RootState) => state.cities.isLoading;

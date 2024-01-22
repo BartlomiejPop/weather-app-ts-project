@@ -4,8 +4,8 @@ import xmark from "../../icons/xmark.svg";
 import Notiflix from "notiflix";
 import { selectAddedCities, selectMainCity } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCity, addCity } from "../../redux/slice";
-import { setMainCity } from "../../redux/operations";
+import { deleteCity } from "../../redux/slice";
+import { setMainCity, addCity } from "../../redux/operations";
 
 interface cityOptions {
 	city: string;
@@ -16,7 +16,7 @@ interface city {
 	name: string;
 	temperature: number;
 	icon: string;
-	cloud: string | null;
+	cloud: number | null;
 	condition: string | null;
 	feelslike: number | null;
 	humidity: number | null;
@@ -35,7 +35,7 @@ export const AddedCities = () => {
 
 	const handleSwap = (city: city) => {
 		const validateKeys = (cityObject: city) => {
-			const allKeys = Object.keys(cityObject);
+			const allKeys = Object.keys(cityObject) as (keyof city)[];
 			const validKeys = allKeys.filter(
 				(key) =>
 					cityObject[key] !== null &&
@@ -89,7 +89,7 @@ export const AddedCities = () => {
 
 	return (
 		<div className="added-cities">
-			{addedCities.map((city: city, index: number) => (
+			{addedCities.map((city, index: number) => (
 				<div key={index} className="city-card">
 					<div className="options">
 						<button className="options__btn" onClick={() => handleSwap(city)}>
@@ -107,7 +107,6 @@ export const AddedCities = () => {
 					<span className="detailed-informations__item--value">
 						{city.temperature} °C
 					</span>
-
 					<ul className="detailed-informations">
 						{city.cloud !== null && (
 							<li className="detailed-informations__item">

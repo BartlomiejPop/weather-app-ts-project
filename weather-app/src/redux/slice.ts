@@ -1,25 +1,16 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { setMainCity, fetchMatchingCities } from "./operations";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
+import {
+	setMainCity,
+	fetchMatchingCities,
+	getCurrentPosition,
+	addCity,
+} from "./operations";
 import Notiflix from "notiflix";
-// import { selectAddedCities } from "./selectors";
-// import { useSelector } from "react-redux";
 
-const apiKey = "8bd6b7084a674066b2c180103231804";
-
-interface cityOptions {
-	city: string;
-	options: string[];
-}
-
-interface CityState {
-	cities: string[];
-	isModalOpen: boolean;
-	isLoading: boolean;
-	error: null | string;
-	data: {};
-	fetchedCapitals: {};
-}
+// interface cityOptions {
+// 	city: string;
+// 	options: string[];
+// }
 
 interface cityInformation {
 	name: string;
@@ -32,7 +23,16 @@ interface cityInformation {
 	pressure: number;
 }
 
-const initialState = {
+interface cityState {
+	addedCities: cityInformation[];
+	mainCity: cityInformation | null;
+	isModalOpen: boolean;
+	isLoading: boolean;
+	error: null | string;
+	fetchedCities: { city: string; country: string }[] | null;
+}
+
+const initialState: cityState = {
 	addedCities: [],
 	mainCity: null,
 	isModalOpen: false,
@@ -40,58 +40,6 @@ const initialState = {
 	error: null,
 	fetchedCities: [],
 };
-
-const handlePending = (state: CityState) => {
-	state.isLoading = true;
-};
-
-const handleRejected = (state: CityState, action: any) => {
-	state.isLoading = false;
-	state.error = action.payload;
-};
-
-export const addCity = createAsyncThunk(
-	"addCity",
-	async (cityOptions: cityOptions, thunkAPI) => {
-		const city = cityOptions.city;
-		const options = cityOptions.options;
-		try {
-			const response = await axios.get(
-				`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`
-			);
-
-			const information: cityInformation = {
-				name: response.data.location.name,
-				temperature: response.data.current.temp_c,
-				icon: response.data.current.condition.icon,
-				feelslike: options.includes("feelslike_c")
-					? response.data.current.feelslike_c
-					: null,
-				condition: options.includes("condition.text")
-					? response.data.current.condition.text
-					: null,
-				humidity: options.includes("humidity")
-					? response.data.current.humidity
-					: null,
-				cloud: options.includes("cloud") ? response.data.current.cloud : null,
-				pressure: options.includes("pressure_mb")
-					? response.data.current.pressure_mb
-					: null,
-			};
-			const existingInformation = JSON.parse(
-				localStorage.getItem("cityInformations") || "[]"
-			);
-			existingInformation.push(information);
-			localStorage.setItem(
-				"cityInformations",
-				JSON.stringify(existingInformation)
-			);
-			return information;
-		} catch (e: any) {
-			return thunkAPI.rejectWithValue(e.message);
-		}
-	}
-);
 
 export const citySlice = createSlice({
 	name: "cities",
@@ -130,35 +78,48 @@ export const citySlice = createSlice({
 			state.mainCity = null;
 			localStorage.removeItem("MaincityInformations");
 		},
-		swap: (state, action) => {
-			console.log(action.payload);
+		deleteResults: (state) => {
+			state.fetchedCities = [];
 		},
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase(addCity.pending, () => {
-				handlePending;
+			.addCase(addCity.pending, (state) => {
+				state.isLoading = true;
 			})
 			.addCase(addCity.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.addedCities.push(action.payload);
 			})
-			.addCase(addCity.rejected, () => {
-				handleRejected;
+			.addCase(addCity.rejected, (state, action) => {
+				state.isLoading = false;
+				state.error =
+					typeof action.payload === "string" ? action.payload : null;
 			})
-			.addCase(setMainCity.pending, () => {
-				handlePending;
+			.addCase(setMainCity.pending, (state) => {
+				state.isLoading = true;
 			})
 			.addCase(setMainCity.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.mainCity = action.payload;
 			})
-			.addCase(setMainCity.rejected, () => {
-				handleRejected;
+			.addCase(setMainCity.rejected, (state, action) => {
+				state.isLoading = false;
+				state.error =
+					typeof action.payload === "string" ? action.payload : null;
 			})
 
 			.addCase(fetchMatchingCities.fulfilled, (state, action) => {
 				state.fetchedCities = action.payload;
+			})
+
+			.addCase(getCurrentPosition.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getCurrentPosition.rejected, (state, action) => {
+				state.isLoading = false;
+				state.error =
+					typeof action.payload === "string" ? action.payload : null;
 			});
 	},
 });
@@ -169,6 +130,6 @@ export const {
 	deleteCity,
 	fetchCities,
 	deleteMainCity,
-	swap,
+	deleteResults,
 } = citySlice.actions;
 export const cityReducer = citySlice.reducer;
