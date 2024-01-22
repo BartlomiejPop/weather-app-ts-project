@@ -56,7 +56,7 @@ export const setMainCity = createAsyncThunk(
 		}
 		try {
 			const response = await axios.get(
-				`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`
+				`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`
 			);
 
 			const information: cityInformation = {
@@ -106,7 +106,7 @@ export const addCity = createAsyncThunk(
 
 		try {
 			const response = await axios.get(
-				`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`
+				`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`
 			);
 
 			const information: cityInformation = {
