@@ -113,6 +113,13 @@
 		font-size: 25px;
 	}
 
+	&__field {
+		display: flex;
+		gap: 50px;
+		text-align: center;
+		font-size: 20px;
+	}
+
 	@media screen and (max-width: 800px) {
 		&__label {
 			font-size: 11px;
