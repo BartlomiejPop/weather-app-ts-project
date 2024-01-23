@@ -4,6 +4,7 @@ import {
 	fetchMatchingCities,
 	getCurrentPosition,
 	addCity,
+	fetchAddedCities,
 } from "./operations";
 import Notiflix from "notiflix";
 
@@ -62,11 +63,11 @@ export const citySlice = createSlice({
 				JSON.stringify(state.addedCities)
 			);
 		},
-		fetchCities: (state) => {
-			const existingInformation = JSON.parse(
-				localStorage.getItem("cityInformations") || "[]"
-			);
-			state.addedCities = existingInformation;
+		fetchMainCity: (state) => {
+			// const existingInformation = JSON.parse(
+			// 	localStorage.getItem("cityInformations") || "[]"
+			// );
+			// state.addedCities = existingInformation;
 
 			const mainCityInformation = JSON.parse(
 				localStorage.getItem("MaincityInformations") || "null"
@@ -122,6 +123,20 @@ export const citySlice = createSlice({
 				state.isLoading = false;
 				state.error =
 					typeof action.payload === "string" ? action.payload : null;
+			})
+
+			.addCase(fetchAddedCities.fulfilled, (state, action) => {
+				state.addedCities = action.payload;
+				state.isLoading = false;
+			})
+
+			.addCase(fetchAddedCities.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(fetchAddedCities.rejected, (state, action) => {
+				state.isLoading = false;
+				state.error =
+					typeof action.payload === "string" ? action.payload : null;
 			});
 	},
 });
@@ -130,7 +145,7 @@ export const {
 	openModal,
 	closeModal,
 	deleteCity,
-	fetchCities,
+	fetchMainCity,
 	deleteMainCity,
 	deleteResults,
 } = citySlice.actions;

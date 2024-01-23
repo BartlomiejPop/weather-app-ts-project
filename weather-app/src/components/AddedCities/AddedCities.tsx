@@ -1,12 +1,15 @@
-import "./AddedCities.scss";
-import swap from "../../icons/swap.svg";
-import xmark from "../../icons/xmark.svg";
-import Notiflix from "notiflix";
+import { useEffect } from "react";
+
 import { selectAddedCities, selectMainCity } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCity, deleteMainCity } from "../../redux/slice";
-import { setMainCity, addCity } from "../../redux/operations";
+import { setMainCity, addCity, fetchAddedCities } from "../../redux/operations";
 import { AppDispatch } from "../../redux/store";
+
+import "./AddedCities.scss";
+import Notiflix from "notiflix";
+import swap from "../../icons/swap.svg";
+import xmark from "../../icons/xmark.svg";
 
 interface cityOptions {
 	city: string;
@@ -26,8 +29,41 @@ interface city {
 
 export const AddedCities = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const addedCities = useSelector(selectAddedCities);
 	const mainCity = useSelector(selectMainCity);
+	const addedCities = useSelector(selectAddedCities);
+
+	useEffect(() => {
+		if (localStorage.getItem("cityInformations") !== "[]") {
+			dispatch(fetchAddedCities());
+		}
+	}, []);
+
+	const validateKeys = (cityObject: city) => {
+		const allKeys = Object.keys(cityObject) as (keyof city)[];
+		const validKeys = allKeys.filter(
+			(key) =>
+				cityObject[key] !== null &&
+				key !== "name" &&
+				key !== "icon" &&
+				key !== "temperature"
+		);
+		return validKeys;
+	};
+
+	const convertOptionsNamesAndSend = (cityObject: cityOptions) => {
+		if (cityObject.options.includes("condition")) {
+			const conditionIndex = cityObject.options.indexOf("condition");
+			cityObject.options.splice(conditionIndex, 1, "condition.text");
+		}
+		if (cityObject.options.includes("feelslike")) {
+			const conditionIndex = cityObject.options.indexOf("feelslike");
+			cityObject.options.splice(conditionIndex, 1, "feelslike_c");
+		}
+		if (cityObject.options.includes("pressure")) {
+			const conditionIndex = cityObject.options.indexOf("pressure");
+			cityObject.options.splice(conditionIndex, 1, "pressure_mb");
+		}
+	};
 
 	const handleDelete = (cityName: string) => {
 		dispatch(deleteCity(cityName));
@@ -35,33 +71,6 @@ export const AddedCities = () => {
 	};
 
 	const handleSwap = (city: city) => {
-		const validateKeys = (cityObject: city) => {
-			const allKeys = Object.keys(cityObject) as (keyof city)[];
-			const validKeys = allKeys.filter(
-				(key) =>
-					cityObject[key] !== null &&
-					key !== "name" &&
-					key !== "icon" &&
-					key !== "temperature"
-			);
-			return validKeys;
-		};
-
-		const convertOptionsNamesAndSend = (cityObject: cityOptions) => {
-			if (cityObject.options.includes("condition")) {
-				const conditionIndex = cityObject.options.indexOf("condition");
-				cityObject.options.splice(conditionIndex, 1, "condition.text");
-			}
-			if (cityObject.options.includes("feelslike")) {
-				const conditionIndex = cityObject.options.indexOf("feelslike");
-				cityObject.options.splice(conditionIndex, 1, "feelslike_c");
-			}
-			if (cityObject.options.includes("pressure")) {
-				const conditionIndex = cityObject.options.indexOf("pressure");
-				cityObject.options.splice(conditionIndex, 1, "pressure_mb");
-			}
-		};
-
 		const cityValidKeys = validateKeys(city);
 
 		const cityOptions = {

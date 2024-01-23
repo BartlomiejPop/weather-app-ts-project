@@ -5,15 +5,15 @@ import AddCityModal from "./AddCityModal/AddCityModal";
 import Loader from "./Loader/Loader";
 import { selectIsLoading } from "../redux/selectors";
 
-import { fetchCities } from "../redux/slice";
-import { useDispatch } from "react-redux";
+// import { fetchCities } from "../redux/slice";
+// import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
 import "./App.scss";
 
 export const App = () => {
-	const dispatch = useDispatch();
-	dispatch(fetchCities());
+	// const dispatch = useDispatch();
+	// dispatch(fetchCities());
 	const isLoading = useSelector(selectIsLoading);
 
 	return (

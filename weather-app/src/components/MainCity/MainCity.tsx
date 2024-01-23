@@ -4,10 +4,11 @@ import xmark from "../../icons/xmark.svg";
 import location from "../../icons/location.svg";
 
 import "./MainCity.scss";
-import { openModal, deleteMainCity } from "../../redux/slice";
+import { openModal, deleteMainCity, fetchMainCity } from "../../redux/slice";
 import Notiflix from "notiflix";
 import { getCurrentPosition, setMainCity } from "../../redux/operations";
 import { AppDispatch } from "../../redux/store";
+import { useEffect } from "react";
 
 interface cityInformation {
 	name: string;
@@ -22,8 +23,13 @@ interface cityInformation {
 
 export const MainCity = () => {
 	const dispatch = useDispatch<AppDispatch>();
+
 	const mainCity = useSelector(selectMainCity) as cityInformation | null;
 	const isMainCitySet = Boolean(mainCity);
+
+	useEffect(() => {
+		dispatch(fetchMainCity());
+	}, [dispatch]);
 
 	const handleDeleteMainCity = () => {
 		dispatch(deleteMainCity(true));

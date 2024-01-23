@@ -1,5 +1,5 @@
-import sun from "../../icons/sun.svg";
 import "./Loader.scss";
+import sun from "../../icons/sun.svg";
 
 export const Loader = () => {
 	return (

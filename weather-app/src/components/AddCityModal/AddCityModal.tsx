@@ -1,17 +1,18 @@
-import "./AddCityModal.scss";
-import xmark from "../../icons/xmark.svg";
-import { selectIsModalOpen, selectFetchedCities } from "../../redux/selectors";
-
 import { useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../redux/store";
+import { selectIsModalOpen, selectFetchedCities } from "../../redux/selectors";
 import { closeModal, deleteResults } from "../../redux/slice";
 import {
 	setMainCity,
 	fetchMatchingCities,
 	addCity,
 } from "../../redux/operations";
+
+import "./AddCityModal.scss";
+import xmark from "../../icons/xmark.svg";
 import Notiflix from "notiflix";
-import { AppDispatch } from "../../redux/store";
 
 export const AddCityModal = () => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -97,7 +98,7 @@ export const AddCityModal = () => {
 				<form className="add-city-modal__form" onSubmit={handleSubmit}>
 					<div className="add-city-modal__interface">
 						<div className="add-city-modal__city">
-							<span className="add-city-modal__city--label">City name:</span>
+							<span className="add-city-modal__label">City name:</span>
 							<input
 								name="cityName"
 								required
@@ -125,14 +126,12 @@ export const AddCityModal = () => {
 								)}
 							</ul>
 						</div>
-						<div className="add-city-modal__options">
-							<span className="add-city-modal__city--label">
-								Select informations :
-							</span>
-							<div className="add-city-modal__options--checkbox-field">
+						<div className="city-options">
+							<span className="city-options__label">Select informations :</span>
+							<div className="city-options__field">
 								<input
 									type="checkbox"
-									className="add-city-modal__options--checkbox"
+									className="city-options__checkbox"
 									id="Set as main"
 									value="Set as main"
 									checked={selectedOptions.includes("Set as main")}
@@ -140,10 +139,10 @@ export const AddCityModal = () => {
 								/>
 								<label htmlFor="Set as main">Set as main</label>
 							</div>
-							<div className="add-city-modal__options--checkbox-field">
+							<div className="city-options__field">
 								<input
 									type="checkbox"
-									className="add-city-modal__options--checkbox"
+									className="city-options__checkbox"
 									id="feelslike_c"
 									value="feelslike_c"
 									checked={selectedOptions.includes("feelslike_c")}
@@ -151,10 +150,10 @@ export const AddCityModal = () => {
 								/>
 								<label htmlFor="feelslike_c">Feelslike temperature</label>
 							</div>
-							<div className="add-city-modal__options--checkbox-field">
+							<div className="city-options__field">
 								<input
 									type="checkbox"
-									className="add-city-modal__options--checkbox"
+									className="city-options__checkbox"
 									id="rainfall"
 									value="condition.text"
 									checked={selectedOptions.includes("condition.text")}
@@ -162,10 +161,10 @@ export const AddCityModal = () => {
 								/>
 								<label htmlFor="rainfall">Rainfall</label>
 							</div>
-							<div className="add-city-modal__options--checkbox-field">
+							<div className="city-options__field">
 								<input
 									type="checkbox"
-									className="add-city-modal__options--checkbox"
+									className="city-options__checkbox"
 									id="humidity"
 									value="humidity"
 									checked={selectedOptions.includes("humidity")}
@@ -173,10 +172,10 @@ export const AddCityModal = () => {
 								/>
 								<label htmlFor="humidity">Humidity</label>
 							</div>
-							<div className="add-city-modal__options--checkbox-field">
+							<div className="city-options__field">
 								<input
 									type="checkbox"
-									className="add-city-modal__options--checkbox"
+									className="city-options__checkbox"
 									id="cloud"
 									value="cloud"
 									checked={selectedOptions.includes("cloud")}
@@ -184,10 +183,10 @@ export const AddCityModal = () => {
 								/>
 								<label htmlFor="cloud">Cloud</label>
 							</div>
-							<div className="add-city-modal__options--checkbox-field">
+							<div className="city-options__field">
 								<input
 									type="checkbox"
-									className="add-city-modal__options--checkbox"
+									className="city-options__checkbox"
 									id="pressure_mb"
 									value="pressure_mb"
 									checked={selectedOptions.includes("pressure_mb")}

@@ -176,6 +176,57 @@ export const fetchMatchingCities = createAsyncThunk(
 	}
 );
 
+export const fetchAddedCities = createAsyncThunk(
+	"fetchAddedCities",
+	async (_, thunkAPI) => {
+		const savedCities = JSON.parse(
+			localStorage.getItem("cityInformations") || "[]"
+		);
+		try {
+			const savedCitiesInformations = await Promise.all(
+				savedCities.map(async (city: cityInformation) => {
+					try {
+						const response = await axios.get(
+							`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city.name}&aqi=yes`
+						);
+
+						const information: cityInformation = {
+							name: response.data.location.name,
+							temperature: response.data.current.temp_c,
+							icon: response.data.current.condition.icon,
+							feelslike:
+								city.feelslike !== null
+									? response.data.current.feelslike_c
+									: null,
+							condition:
+								city.condition !== null
+									? response.data.current.condition.text
+									: null,
+							humidity:
+								city.humidity !== null ? response.data.current.humidity : null,
+							cloud: city.cloud !== null ? response.data.current.cloud : null,
+							pressure:
+								city.pressure !== null
+									? response.data.current.pressure_mb
+									: null,
+						};
+
+						return information;
+					} catch (error) {
+						console.error(`Error fetching data for ${city.name}:`, error);
+						return null;
+					}
+				})
+			);
+
+			console.log(savedCitiesInformations);
+			return savedCitiesInformations;
+		} catch (e: any) {
+			return thunkAPI.rejectWithValue(e.message);
+		}
+	}
+);
+
 export const getCurrentPosition = createAsyncThunk(
 	"getCurrentPosition",
 	async (_, thunkAPI) => {
@@ -220,6 +271,7 @@ export const getCurrentPosition = createAsyncThunk(
 );
 
 export default {
+	fetchAddedCities,
 	setMainCity,
 	fetchMatchingCities,
 	getCurrentPosition,

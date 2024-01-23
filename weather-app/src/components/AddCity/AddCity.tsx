@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { openModal } from "../../redux/slice"; // Podmień
+import { openModal } from "../../redux/slice";
 
 import plus from "../../icons/plus.svg";
 import "./AddCity.scss";
