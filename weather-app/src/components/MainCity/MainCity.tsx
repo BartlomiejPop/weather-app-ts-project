@@ -36,15 +36,16 @@ export const MainCity = () => {
 	const handleGetPosition = async () => {
 		if (navigator.geolocation) {
 			const response = await dispatch(getCurrentPosition());
+			console.log(response);
 			const payload = response.payload as {
 				city: string;
 				options: string[];
 			};
 			if (payload.city) {
-				dispatch(setMainCity(payload));
-				if (payload.city !== mainCity!.name) {
+				if (payload.city !== mainCity?.name) {
 					Notiflix.Notify.success(`${payload.city} is now set as main city`);
 				}
+				dispatch(setMainCity(payload));
 			} else {
 				Notiflix.Notify.failure(`Geolocation error`);
 			}

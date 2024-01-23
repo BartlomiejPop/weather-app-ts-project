@@ -40,9 +40,11 @@ interface Position {
 }
 
 export const setMainCity = createAsyncThunk(
-	"selectMainCity",
+	"setMainCity",
 	async (cityOptions: cityOptions, thunkAPI) => {
-		const city = cityOptions.city;
+		const city = cityOptions.city
+			.normalize("NFD")
+			.replace(/[\u0300-\u036f]/g, "");
 		const options = cityOptions.options;
 
 		const state = thunkAPI.getState() as cityState;
@@ -90,14 +92,18 @@ export const setMainCity = createAsyncThunk(
 export const addCity = createAsyncThunk(
 	"addCity",
 	async (cityOptions: cityOptions, thunkAPI) => {
-		const city = cityOptions.city;
+		const city = cityOptions.city
+			.normalize("NFD")
+			.replace(/[\u0300-\u036f]/g, "");
 		const options = cityOptions.options;
 
 		const state = thunkAPI.getState() as cityState;
-		const mainCity = state.cities.mainCity?.name === city;
+		const mainCity =
+			state.cities.mainCity?.name.toLowerCase() === city.toLowerCase();
 		const addedCities = state.cities.addedCities;
 		const existingCity = addedCities.find(
-			(existingCity: cityInformation) => existingCity.name === city
+			(existingCity: cityInformation) =>
+				existingCity.name.toLowerCase() === city.toLowerCase()
 		);
 
 		if (existingCity || mainCity) {
@@ -146,9 +152,10 @@ export const addCity = createAsyncThunk(
 export const fetchMatchingCities = createAsyncThunk(
 	"fetchMatchingCities",
 	async (value: string, thunkAPI) => {
+		const parsedValue = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 		try {
 			const response = await axios.get(
-				`https://api.opencagedata.com/geocode/v1/json?q=${value}&key=${OpenCageDataApiKey}&language=pl&pretty=1`
+				`https://api.opencagedata.com/geocode/v1/json?q=${parsedValue}&key=${OpenCageDataApiKey}&language=pl&pretty=1`
 			);
 
 			const resultObjects = response.data.results;
@@ -183,10 +190,17 @@ export const getCurrentPosition = createAsyncThunk(
 			const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${OpenCageDataApiKey}&language=pl&pretty=1`;
 
 			const response = await axios.get(url);
-			if (!response.data.results[0].components.city) {
+			console.log(response.data.results[0].components.village);
+			if (
+				!response.data.results[0].components.city &&
+				!response.data.results[0].components.village
+			) {
 				return thunkAPI.rejectWithValue("not found");
 			}
-			const currentCity = response.data.results[0].components.city;
+			const currentCity =
+				response.data.results[0].components.city ||
+				response.data.results[0].components.village;
+			console.log(currentCity);
 			const cityObject = {
 				city: currentCity,
 				options: [

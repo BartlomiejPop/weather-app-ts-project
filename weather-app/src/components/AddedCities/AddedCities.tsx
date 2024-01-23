@@ -146,7 +146,7 @@ export const AddedCities = () => {
 							<li className="detailed-informations__item">
 								<span>Pressure:</span>
 								<span className="detailed-informations__item--value">
-									{city.pressure}%
+									{city.pressure}hPa
 								</span>
 							</li>
 						)}

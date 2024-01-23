@@ -1,5 +1,4 @@
-import { RootState } from "./rootReducer";
-
+import { RootState } from "./store";
 export const selectIsModalOpen = (state: RootState) => state.cities.isModalOpen;
 
 export const selectAddedCities = (state: RootState) => state.cities.addedCities;
