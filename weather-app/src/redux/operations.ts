@@ -3,6 +3,7 @@ import axios from "axios";
 import Notiflix from "notiflix";
 
 const apiKey = "8bd6b7084a674066b2c180103231804";
+const OpenCageDataApiKey = "946f6e10934f4a90b7031850401efb91";
 
 interface cityOptions {
 	city: string;
@@ -147,16 +148,19 @@ export const fetchMatchingCities = createAsyncThunk(
 	async (value: string, thunkAPI) => {
 		try {
 			const response = await axios.get(
-				` http://api.geonames.org/searchJSON?q=${value}&MaxRows=1&username=bartlomiejp`
+				`https://api.opencagedata.com/geocode/v1/json?q=${value}&key=${OpenCageDataApiKey}&language=pl&pretty=1`
 			);
-			const resultObjects = response.data.geonames;
+
+			const resultObjects = response.data.results;
 			const arrayOfNeededObjects = [];
-			for (let i = 0; i < 8; i++) {
+			for (let i = 0; i < Math.min(8, resultObjects.length); i++) {
 				const currentObject = resultObjects[i];
-				arrayOfNeededObjects.push({
-					city: currentObject.name,
-					country: currentObject.countryName,
-				});
+				if (currentObject.components.city) {
+					arrayOfNeededObjects.push({
+						city: currentObject.components.city,
+						country: currentObject.components.country,
+					});
+				}
 			}
 			return arrayOfNeededObjects;
 		} catch (e: any) {
@@ -168,7 +172,6 @@ export const fetchMatchingCities = createAsyncThunk(
 export const getCurrentPosition = createAsyncThunk(
 	"getCurrentPosition",
 	async (_, thunkAPI) => {
-		const apiKey = "946f6e10934f4a90b7031850401efb91";
 		try {
 			const position: Position = await new Promise((resolve, reject) => {
 				navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -176,9 +179,8 @@ export const getCurrentPosition = createAsyncThunk(
 
 			const lat = position.coords.latitude;
 			const lon = position.coords.longitude;
-			console.log(lat, lon);
 
-			const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}&language=pl&pretty=1`;
+			const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${OpenCageDataApiKey}&language=pl&pretty=1`;
 
 			const response = await axios.get(url);
 			if (!response.data.results[0].components.city) {

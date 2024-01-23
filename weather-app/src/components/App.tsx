@@ -18,7 +18,9 @@ export const App = () => {
 
 	return (
 		<div className="project-container">
-			<h1 style={{ marginTop: "50px" }}>Weather App</h1>
+			<h1 style={{ marginTop: "50px", fontFamily: "'Dancing Script',cursive" }}>
+				Weather App
+			</h1>
 			<MainCity />
 			<AddCity />
 			<AddedCities />

@@ -42,7 +42,9 @@ export const MainCity = () => {
 			};
 			if (payload.city) {
 				dispatch(setMainCity(payload));
-				Notiflix.Notify.success(`${payload.city} is now set as main city`);
+				if (payload.city !== mainCity!.name) {
+					Notiflix.Notify.success(`${payload.city} is now set as main city`);
+				}
 			} else {
 				Notiflix.Notify.failure(`Geolocation error`);
 			}
