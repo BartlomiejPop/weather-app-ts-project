@@ -38,6 +38,12 @@
 		width: 200px;
 	}
 
+	@media screen and (max-width: 1280px) {
+		&__icon {
+			width: 100px;
+		}
+	}
+
 	&__btn {
 		padding: 0;
 		position: absolute;
@@ -61,6 +67,13 @@
 	}
 }
 
+@media screen and (max-width: 1280px) {
+	.labels {
+		width: 100%;
+		justify-self: center;
+	}
+}
+
 .informations {
 	margin: 0;
 	padding: 20px;
@@ -81,6 +94,14 @@
 			font-size: 20px;
 			font-weight: 600;
 		}
+	}
+}
+
+@media screen and (max-width: 1280px) {
+	.informations {
+		gap: 10px;
+		flex-wrap: wrap;
+		justify-content: center;
 	}
 }
 

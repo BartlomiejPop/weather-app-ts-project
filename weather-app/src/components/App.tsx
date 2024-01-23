@@ -18,7 +18,12 @@ export const App = () => {
 
 	return (
 		<div className="project-container">
-			<h1 style={{ marginTop: "50px", fontFamily: "'Dancing Script',cursive" }}>
+			<h1
+				style={{
+					marginTop: "50px",
+					fontFamily: "'Dancing Script',cursive",
+					textAlign: "center",
+				}}>
 				Weather App
 			</h1>
 			<MainCity />
