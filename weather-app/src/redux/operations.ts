@@ -3,7 +3,7 @@ import axios from "axios";
 import Notiflix from "notiflix";
 
 const apiKey = "8bd6b7084a674066b2c180103231804";
-const OpenCageDataApiKey = "946f6e10934f4a90b7031850401efb91";
+const OpenCageDataApiKey = "6f364b714ae3490dabc660338ced3056";
 
 interface cityOptions {
 	city: string;
